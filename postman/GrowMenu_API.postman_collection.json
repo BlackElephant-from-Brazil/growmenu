@@ -1,0 +1,454 @@
+{
+  "info": {
+    "name": "GrowMenu API",
+    "description": "API para plataforma de cardápio digital focada em aumentar vendas e faturamento de restaurantes",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "🔐 Autenticação",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"joao@exemplo.com\",\n  \"password\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Fazer login e obter token JWT"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.access_token) {",
+                  "        pm.collectionVariables.set('token', response.access_token);",
+                  "        console.log('Token salvo automaticamente');",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "👤 Usuários",
+      "item": [
+        {
+          "name": "Registrar Usuário",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"João Silva\",\n  \"email\": \"joao@exemplo.com\",\n  \"password\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "register"]
+            },
+            "description": "Registrar novo usuário (única rota sem autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Meu Perfil",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "profile"]
+            },
+            "description": "Obter perfil do usuário logado"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Usuário por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-do-usuario",
+                  "description": "ID do usuário"
+                }
+              ]
+            },
+            "description": "Buscar detalhes de um usuário específico"
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Todos Usuários",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            },
+            "description": "Listar todos os usuários"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🏢 Empresas",
+      "item": [
+        {
+          "name": "Criar Empresa",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Minha Empresa LTDA\",\n  \"cnpj\": \"12345678000123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/companies",
+              "host": ["{{baseUrl}}"],
+              "path": ["companies"]
+            },
+            "description": "Criar nova empresa"
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Todas Empresas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/companies",
+              "host": ["{{baseUrl}}"],
+              "path": ["companies"]
+            },
+            "description": "Listar todas as empresas"
+          },
+          "response": []
+        },
+        {
+          "name": "Minhas Empresas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/companies/my-companies",
+              "host": ["{{baseUrl}}"],
+              "path": ["companies", "my-companies"]
+            },
+            "description": "Listar empresas do usuário logado"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Empresa por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/companies/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["companies", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-da-empresa",
+                  "description": "ID da empresa"
+                }
+              ]
+            },
+            "description": "Buscar detalhes de uma empresa específica"
+          },
+          "response": []
+        },
+        {
+          "name": "Atualizar Empresa",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nome Atualizado da Empresa\",\n  \"cnpj\": \"98765432000198\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/companies/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["companies", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-da-empresa",
+                  "description": "ID da empresa"
+                }
+              ]
+            },
+            "description": "Atualizar dados de uma empresa"
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Empresa",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/companies/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["companies", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-da-empresa",
+                  "description": "ID da empresa"
+                }
+              ]
+            },
+            "description": "Deletar uma empresa"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🏪 Restaurantes",
+      "item": [
+        {
+          "name": "Criar Restaurante",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Restaurante do João\",\n  \"place\": \"Rua das Flores, 123 - Centro, São Paulo - SP\",\n  \"company_id\": \"uuid-da-empresa\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/restaurants",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurants"]
+            },
+            "description": "Criar novo restaurante"
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Todos Restaurantes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/restaurants",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurants"]
+            },
+            "description": "Listar todos os restaurantes"
+          },
+          "response": []
+        },
+        {
+          "name": "Meus Restaurantes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/restaurants/my-restaurants",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurants", "my-restaurants"]
+            },
+            "description": "Listar restaurantes do usuário logado"
+          },
+          "response": []
+        },
+        {
+          "name": "Restaurantes por Empresa",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/restaurants/company/:companyId",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurants", "company", ":companyId"],
+              "variable": [
+                {
+                  "key": "companyId",
+                  "value": "uuid-da-empresa",
+                  "description": "ID da empresa"
+                }
+              ]
+            },
+            "description": "Listar restaurantes de uma empresa específica"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Restaurante por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/restaurants/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurants", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-do-restaurante",
+                  "description": "ID do restaurante"
+                }
+              ]
+            },
+            "description": "Buscar detalhes de um restaurante específico"
+          },
+          "response": []
+        },
+        {
+          "name": "Atualizar Restaurante",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nome Atualizado do Restaurante\",\n  \"place\": \"Novo Endereço, 456 - Vila Nova, São Paulo - SP\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/restaurants/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurants", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-do-restaurante",
+                  "description": "ID do restaurante"
+                }
+              ]
+            },
+            "description": "Atualizar dados de um restaurante"
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Restaurante",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/restaurants/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurants", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-do-restaurante",
+                  "description": "ID do restaurante"
+                }
+              ]
+            },
+            "description": "Deletar um restaurante"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
